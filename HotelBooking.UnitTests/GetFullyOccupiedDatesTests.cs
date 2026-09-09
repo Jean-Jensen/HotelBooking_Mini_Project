@@ -15,11 +15,7 @@ public class GetFullyOccupiedDatesTests
     public async Task GetFullyOccupiedDates_NoBookings_ReturnsEmptyList()
     {
         //Arrange 
-        var rooms = new List<Room>
-        {
-            new Room { Id = 1, Description = "Room 1" },
-            new Room { Id = 2, Description = "Room 2" }
-        };
+        var rooms = BookingTestData.DefaultRooms;
         var bookings = new List<Booking>();
         
         var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);

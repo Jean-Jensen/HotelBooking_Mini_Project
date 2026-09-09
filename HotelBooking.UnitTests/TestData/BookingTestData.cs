@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HotelBooking.Core;
+using Xunit;
 
 namespace HotelBooking.UnitTests.TestData;
 
@@ -16,48 +17,37 @@ public static class BookingTestData
             new Room { Id = 2, Description = "Room 2" },
             new Room { Id = 3, Description = "Room 3" }
         };
-    
-    public static IEnumerable<object[]> SomeRoomsOccupiedData =>
-        new List<object[]>
+
+    public static TheoryData<List<Booking>> SomeRoomsOccupiedData =>
+        new()
         {
-            // One room occupied
-            new object[]
+            // One room occupied (first theory case)
+            new List<Booking>
             {
-                new List<Booking>
-                {
-                    new Booking
-                    {
-                        Id = 1,
-                        StartDate = StartDate,
-                        EndDate = EndDate,
-                        IsActive = true,
-                        RoomId = 1
-                    }
-                }
+                CreateBooking(1, 1)
             },
 
-            // Two rooms occupied
-            new object[]
+            // Two rooms occupied (second theory case)
+            new List<Booking>
             {
-                new List<Booking>
-                {
-                    new Booking
-                    {
-                        Id = 1,
-                        StartDate = StartDate,
-                        EndDate = EndDate,
-                        IsActive = true,
-                        RoomId = 1
-                    },
-                    new Booking
-                    {
-                        Id = 2,
-                        StartDate = StartDate,
-                        EndDate = EndDate,
-                        IsActive = true,
-                        RoomId = 2
-                    }
-                }
+                CreateBooking(1, 1),
+                CreateBooking(2, 2)
             }
         };
+    
+    private static Booking CreateBooking(int id, int roomId)
+    {
+        return new Booking
+        {
+            Id = id,
+            StartDate = StartDate,
+            EndDate = EndDate,
+            IsActive = true,
+            RoomId = roomId
+        };
+    }
+
 }
+
+            
+        
