@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using HotelBooking.UnitTests.TestData;
+using Moq;
 using Xunit;
 
 namespace HotelBooking.UnitTests;
@@ -243,5 +244,62 @@ public class CreateBookingTests
 
         //Assert
         Assert.True(result);
+    }
+    
+    //Case 20
+    [Fact]
+    public async Task CreateBooking_ValidBooking_ShouldReturnTrue()
+    {
+        List<Room> rooms = [
+            new Room { Id = 1, Description = "Room 1" },
+        ];
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, new List<Booking>());
+        
+
+        Booking newBooking = new Booking
+        {
+            Id = 44,
+            StartDate = DateTime.Today.AddDays(2),
+            EndDate = DateTime.Today.AddDays(2),
+            IsActive = true,
+            RoomId = 1,
+        };
+        
+        //Act
+        var result = await bookingManager.CreateBooking(newBooking); 
+
+        //Assert
+        Assert.True(result);
+        MoqBookingManager.GetBookingRepo().Verify(x => x.AddAsync(newBooking), Times.Once); //verify add was called
+    }
+    
+    //Case 21
+    [Theory]
+    [MemberData(
+        nameof(BookingTestData.OneRoomBookedData),
+        MemberType = typeof(BookingTestData))]
+    public async Task CreateBooking_InvalidBooking_ShouldReturnFalseAndAddShouldNotBeCalled(Booking booking)
+    {
+        List<Room> rooms = [
+            new Room { Id = 1, Description = "Room 1" },
+        ];
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, new List<Booking>([booking]));
+        
+
+        Booking newBooking = new Booking
+        {
+            Id = 44,
+            StartDate = booking.StartDate,
+            EndDate = booking.EndDate,
+            IsActive = true,
+            RoomId = booking.RoomId,
+        };
+        
+        //Act
+        var result = await bookingManager.CreateBooking(newBooking); 
+
+        //Assert
+        Assert.False(result);
+        MoqBookingManager.GetBookingRepo().Verify(x => x.AddAsync(newBooking), Times.Never); //verify add was called
     }
 }
