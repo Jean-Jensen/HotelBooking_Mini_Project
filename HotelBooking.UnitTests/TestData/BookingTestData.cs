@@ -76,7 +76,12 @@ public static class BookingTestData
     [
 
         // One room occupied 
-        CreateBooking(1, 1)
+        CreateBooking(1, 1),
+        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8)),
+        CreateBooking(1, 1, StartDateData.AddDays(12), StartDateData.AddDays(20)),
+        CreateBooking(1, 1, StartDateData.AddDays(32), StartDateData.AddDays(64)),
+        CreateBooking(1, 1, StartDateData.AddDays(3), StartDateData.AddDays(4)),
+        CreateBooking(1, 1, StartDateData.AddDays(3), StartDateData.AddDays(8)),
         
     ];
     

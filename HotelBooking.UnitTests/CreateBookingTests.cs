@@ -35,8 +35,8 @@ public class CreateBookingTests
         Booking newBooking = new Booking
         {
             Id = 44,
-            StartDate = BookingTestData.StartDateData,
-            EndDate = BookingTestData.EndDateData,
+            StartDate = booking.StartDate,
+            EndDate = booking.EndDate,
             IsActive = true,
             RoomId = booking.RoomId,
         };
@@ -84,5 +84,62 @@ public class CreateBookingTests
         
     }
 
+    //Case 14
+    [Theory]
+    [MemberData(
+        nameof(BookingTestData.OneRoomBookedData),
+        MemberType = typeof(BookingTestData))]
+    public async Task CreateBooking_PeriodIsBookedButOneRoomIsStillFree_ShouldReturnTrue(Booking booking)
+    {
+        //Arrange
+        List<Room> rooms = [
+            new Room { Id = 1, Description = "Room 1" },
+            new Room { Id = 2, Description = "Room 2" },
+        ];
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, new List<Booking>([booking]));
+
+        Booking newBooking = new Booking
+        {
+            Id = 44,
+            StartDate = booking.StartDate,
+            EndDate = booking.EndDate,
+            IsActive = true,
+            RoomId = booking.RoomId,
+        };
+        
+        //Act
+        var result = await bookingManager.CreateBooking(newBooking); 
+
+        //Assert
+        Assert.True(result);
+    }
+
+    //Case 15
+    [Theory]
+    [MemberData(
+        nameof(BookingTestData.AllRoomsOccupiedForSeveralDaysData),
+        MemberType = typeof(BookingTestData))]
+    public async Task CreateBooking_AllRoomsBookedForPeriod_ShouldReturnFalse(List<Booking> bookings)
+    {
+        //Arrange
+        var rooms = BookingTestData.DefaultRooms;
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
+        
+        Booking newBooking = new Booking
+        {
+            Id = 44,
+            StartDate = BookingTestData.StartDateData.AddDays(3),
+            EndDate = BookingTestData.StartDateData.AddDays(7),
+            IsActive = true,
+        };
+        
+        //Act
+        var result = await bookingManager.CreateBooking(newBooking); 
+
+        //Assert
+        Assert.False(result);
+        
+        
+    }
 
 }
