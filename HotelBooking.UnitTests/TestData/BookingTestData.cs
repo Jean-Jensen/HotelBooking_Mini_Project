@@ -35,25 +35,6 @@ public static class BookingTestData
         }
     ];
     
-    public static TheoryData<Booking> InactiveData =>
-    [
-
-        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8), false),
-
-        CreateBooking(1, 1, StartDateData.AddDays(10), StartDateData.AddDays(15), false),
-        
-        CreateBooking(1, 1, StartDateData.AddDays(8), StartDateData.AddDays(12), false),
-            
-    ];
-    
-    public static TheoryData<Booking> OneRoomBookedData =>
-    [
-
-        // One room occupied 
-        CreateBooking(1, 1)
-        
-    ];
-    
     public static TheoryData<List<Booking>> AllRoomsOccupiedForSeveralDaysData =>
     [
 
@@ -76,6 +57,27 @@ public static class BookingTestData
             CreateBooking(2, 2, StartDateData.AddDays(9), StartDateData.AddDays(13)),
             CreateBooking(3, 3, StartDateData.AddDays(11), StartDateData.AddDays(17))
         }
+    ];
+    
+    public static TheoryData<Booking> InactiveData =>
+    [
+
+        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8), false),
+
+        CreateBooking(1, 1, StartDateData.AddDays(10), StartDateData.AddDays(15), false),
+        
+        CreateBooking(1, 1, StartDateData.AddDays(8), StartDateData.AddDays(12), false),
+        
+        CreateBooking(1, 1, StartDateData.AddDays(32), StartDateData.AddDays(64), false),
+            
+    ];
+    
+    public static TheoryData<Booking> OneRoomBookedData =>
+    [
+
+        // One room occupied 
+        CreateBooking(1, 1)
+        
     ];
     
     public static Booking CreateBooking(int id, int roomId, DateTime? startDate = null, DateTime? endDate = null, bool? isActive = true)
