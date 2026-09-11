@@ -7,8 +7,8 @@ namespace HotelBooking.UnitTests.TestData;
 
 public static class BookingTestData
 {
-    public static readonly DateTime StartDateData = DateTime.Today;
-    public static readonly DateTime EndDateData = StartDateData.AddDays(4);
+    public static readonly DateTime StartDateData = DateTime.Today.AddDays(1);
+    public static readonly DateTime EndDateData = StartDateData.AddDays(5);
 
     public static List<Room> DefaultRooms =>
     [
@@ -33,6 +33,25 @@ public static class BookingTestData
             CreateBooking(1, 1),
             CreateBooking(2, 2)
         }
+    ];
+    
+    public static TheoryData<Booking> InactiveData =>
+    [
+
+        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8), false),
+
+        CreateBooking(1, 1, StartDateData.AddDays(10), StartDateData.AddDays(15), false),
+        
+        CreateBooking(1, 1, StartDateData.AddDays(8), StartDateData.AddDays(12), false),
+            
+    ];
+    
+    public static TheoryData<Booking> OneRoomBookedData =>
+    [
+
+        // One room occupied 
+        CreateBooking(1, 1)
+        
     ];
     
     public static TheoryData<List<Booking>> AllRoomsOccupiedForSeveralDaysData =>

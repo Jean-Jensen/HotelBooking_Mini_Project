@@ -20,7 +20,7 @@ public static class MoqBookingManager
         // Configure GetAllAsync()
         roomRepository.Setup(r => r.GetAllAsync()).ReturnsAsync(rooms);
         bookingRepository.Setup(b => b.GetAllAsync()).ReturnsAsync(bookings);
-
+        
         // Return BookingManager
         return new BookingManager(bookingRepository.Object, roomRepository.Object);
     }
