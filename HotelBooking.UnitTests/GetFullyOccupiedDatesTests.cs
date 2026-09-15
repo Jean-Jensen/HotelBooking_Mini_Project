@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
@@ -8,9 +8,11 @@ using Xunit;
 
 namespace HotelBooking.UnitTests;
 
-public class GetFullyOccupiedDatesTests
+public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
 {
-    
+    private readonly ITestOutputHelper output = output; // output to console
+
+    // Case 1
     [Fact]
     public async Task GetFullyOccupiedDates_NoBookings_ReturnsEmptyList()
     {
@@ -28,6 +30,7 @@ public class GetFullyOccupiedDatesTests
         Assert.NotNull(result);
     }
     
+    // Case 2
     [Theory]
     [MemberData(
         nameof(BookingTestData.SomeRoomsOccupiedData),
@@ -46,6 +49,7 @@ public class GetFullyOccupiedDatesTests
         Assert.Empty(result);
     }
     
+    // Case 3
     [Fact]
     public async Task GetFullyOccupiedDates_AllRoomsOccupied_ReturnsDate()
     {
@@ -67,15 +71,24 @@ public class GetFullyOccupiedDatesTests
         //Assert 
         Assert.NotEmpty(result);
         Assert.NotNull(result);
-        Assert.Contains(BookingTestData.StartDateData, result);
-        Assert.Contains(BookingTestData.EndDateData, result);
+        
+        var expectedDates = Enumerable.Range(
+                0,
+                (BookingTestData.EndDateData - BookingTestData.StartDateData).Days + 1)
+            .Select(offset => BookingTestData.StartDateData.AddDays(offset))
+            .ToArray();
+
+        Assert.Equal(expectedDates, result.OrderBy(date => date).ToArray());
     }
     
+    // Case 4
     [Theory]
     [MemberData(
         nameof(BookingTestData.AllRoomsOccupiedForSeveralDaysData),
         MemberType = typeof(BookingTestData))]
-    public async Task GetFullyOccupiedDates_AllRoomsOccupiedForSeveralDays_ReturnsAllDates(List<Booking> bookings)
+    public async Task GetFullyOccupiedDates_AllRoomsOccupiedForSeveralDays_ReturnsAllDates(
+        List<Booking> bookings,
+        int[] expectedDayOffsets)    
     {
         //Arrange 
         var rooms = BookingTestData.DefaultRooms;
@@ -86,9 +99,17 @@ public class GetFullyOccupiedDatesTests
             .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.StartDateData.AddDays(30));
         
         //Assert 
-        //TODO: Add assertions to check that the result contains all the expected fully occupied dates based on the provided bookings.
+        output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
+        
         Assert.NotEmpty(result);
-        Assert.Contains(BookingTestData.StartDateData.AddDays(2), result);
-        Assert.Contains(BookingTestData.StartDateData.AddDays(8), result);
+        var expectedDates = expectedDayOffsets
+            .Select(offset => BookingTestData.StartDateData.AddDays(offset))
+            .ToArray();
+
+        Assert.Equal(expectedDates, result.OrderBy(date => date).ToArray());
+       
     }
+    
+    // Case 5
+    
 }
