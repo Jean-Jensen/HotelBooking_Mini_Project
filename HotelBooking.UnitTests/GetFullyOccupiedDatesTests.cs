@@ -27,7 +27,6 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
         
         //Assert 
         Assert.Empty(result);
-        Assert.NotNull(result);
     }
     
     // Case 2
@@ -69,9 +68,6 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
             .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.EndDateData);
         
         //Assert 
-        Assert.NotEmpty(result);
-        Assert.NotNull(result);
-        
         var expectedDates = Enumerable.Range(
                 0,
                 (BookingTestData.EndDateData - BookingTestData.StartDateData).Days + 1)
@@ -81,12 +77,12 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
         Assert.Equal(expectedDates, result.OrderBy(date => date).ToArray());
     }
     
-    // Case 4
+    // Case 4 and 5
     [Theory]
     [MemberData(
         nameof(BookingTestData.AllRoomsOccupiedForSeveralDaysData),
         MemberType = typeof(BookingTestData))]
-    public async Task GetFullyOccupiedDates_AllRoomsOccupiedForSeveralDays_ReturnsAllDates(
+    public async Task GetFullyOccupiedDates_PartOfPeriodFullyOccupied_ReturnsOnlyFullyOccupiedDates(
         List<Booking> bookings,
         int[] expectedDayOffsets)    
     {
@@ -101,7 +97,6 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
         //Assert 
         output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
         
-        Assert.NotEmpty(result);
         var expectedDates = expectedDayOffsets
             .Select(offset => BookingTestData.StartDateData.AddDays(offset))
             .ToArray();
@@ -110,6 +105,54 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
        
     }
     
-    // Case 5
+    // Case 6
+    [Fact]
+    public async Task GetFullyOccupiedDates_StartAndEndDatesFullyOccupied_IncludesBoundaries()
+    {
+        //Arrange 
+        var rooms = BookingTestData.DefaultRooms;
+        var bookings = new List<Booking>
+        {
+            BookingTestData.CreateBooking(1, rooms[0].Id),
+            BookingTestData.CreateBooking(2, rooms[1].Id),
+            BookingTestData.CreateBooking(3, rooms[2].Id)
+        };
+        
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
+        
+        //Act 
+        var result = await bookingManager
+            .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.EndDateData);
+        
+        //Assert 
+        output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
+        
+        Assert.Contains(BookingTestData.StartDateData, result);
+        Assert.Contains(BookingTestData.EndDateData, result);
+    }
     
+    // Case 7
+    [Fact]
+    public async Task GetFullyOccupiedDates_InactiveBooking_IgnoresBooking()
+    {
+        //Arrange 
+        var rooms = BookingTestData.DefaultRooms;
+        var bookings = new List<Booking>
+        {
+            BookingTestData.CreateBooking(1, rooms[0].Id),
+            BookingTestData.CreateBooking(2, rooms[1].Id),
+            BookingTestData.CreateBooking(3, rooms[2].Id, isActive: false)
+        };
+        
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
+        
+        //Act 
+        var result = await bookingManager
+            .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.EndDateData);
+        
+        //Assert 
+        output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
+        
+        Assert.Empty(result);
+    }
 }
