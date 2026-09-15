@@ -114,7 +114,7 @@ public class CreateBookingTests
     [MemberData(
         nameof(BookingTestData.AllRoomsOccupiedForSeveralDaysData),
         MemberType = typeof(BookingTestData))]
-    public async Task CreateBooking_AllRoomsBookedForPeriod_ShouldReturnFalse(List<Booking> bookings)
+    public async Task CreateBooking_AllRoomsBookedForPeriod_ShouldReturnFalse(List<Booking> bookings, int[] expectedDayOffsets)
     {
         //Arrange
         var rooms = BookingTestData.DefaultRooms;

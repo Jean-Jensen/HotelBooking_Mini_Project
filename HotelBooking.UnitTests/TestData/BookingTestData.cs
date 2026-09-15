@@ -27,7 +27,6 @@ public static class BookingTestData
         },
 
         // Two rooms occupied (second theory case)
-
         new List<Booking>
         {
             CreateBooking(1, 1),
@@ -35,29 +34,32 @@ public static class BookingTestData
         }
     ];
     
-    public static TheoryData<List<Booking>> AllRoomsOccupiedForSeveralDaysData =>
-    [
+    public static TheoryData<List<Booking>, int[]> AllRoomsOccupiedForSeveralDaysData =>
+        new()
+        {
+            {
+                new List<Booking>
+                {
+                    CreateBooking(1, 1, StartDateData, StartDateData.AddDays(10)),
+                    CreateBooking(2, 2, StartDateData.AddDays(1), StartDateData.AddDays(13)),
+                    CreateBooking(3, 3, StartDateData.AddDays(2), StartDateData.AddDays(15))
+                },
+                new[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+            },
+            {
+                new List<Booking>
+                {
+                    CreateBooking(1, 1, StartDateData, StartDateData.AddDays(8)),
+                    CreateBooking(2, 2, StartDateData.AddDays(1), StartDateData.AddDays(8)),
+                    CreateBooking(3, 3, StartDateData.AddDays(2), StartDateData.AddDays(10)),
 
-        // All rooms occupied with different overlapping dates
-        // first theory case
-        new List<Booking>
-        {
-            CreateBooking(1, 1, StartDateData, StartDateData.AddDays(10)),
-            CreateBooking(2, 2, StartDateData.AddDays(1), StartDateData.AddDays(15)),
-            CreateBooking(3, 3, StartDateData.AddDays(2), StartDateData.AddDays(17))
-        },
-        // second theory case
-        new List<Booking>
-        {
-            CreateBooking(1, 1, StartDateData, StartDateData.AddDays(8)),
-            CreateBooking(2, 2, StartDateData.AddDays(1), StartDateData.AddDays(8)),
-            CreateBooking(3, 3, StartDateData.AddDays(2), StartDateData.AddDays(10)),
-            
-            CreateBooking(1, 1, StartDateData.AddDays(9), StartDateData.AddDays(14)),
-            CreateBooking(2, 2, StartDateData.AddDays(9), StartDateData.AddDays(13)),
-            CreateBooking(3, 3, StartDateData.AddDays(11), StartDateData.AddDays(17))
-        }
-    ];
+                    CreateBooking(1, 1, StartDateData.AddDays(9), StartDateData.AddDays(14)),
+                    CreateBooking(2, 2, StartDateData.AddDays(9), StartDateData.AddDays(13)),
+                    CreateBooking(3, 3, StartDateData.AddDays(11), StartDateData.AddDays(17))
+                },
+                new[] { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 }
+            }
+        };
     
     public static TheoryData<Booking> InactiveData =>
     [
