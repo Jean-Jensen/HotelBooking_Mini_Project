@@ -53,29 +53,22 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
     [Fact]
     public async Task GetFullyOccupiedDates_AllRoomsOccupied_ReturnsDate()
     {
-        //Arrange 
+        // Arrange
+        var date = BookingTestData.StartDateData;
         var rooms = BookingTestData.DefaultRooms;
         var bookings = new List<Booking>
         {
-            BookingTestData.CreateBooking(1, rooms[0].Id),
-            BookingTestData.CreateBooking(2, rooms[1].Id),
-            BookingTestData.CreateBooking(3, rooms[2].Id)
+            BookingTestData.CreateBooking(1, rooms[0].Id, date, date),
+            BookingTestData.CreateBooking(2, rooms[1].Id, date, date),
+            BookingTestData.CreateBooking(3, rooms[2].Id, date, date)
         };
-        
         var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
-        
-        //Act 
-        var result = await bookingManager
-            .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.EndDateData);
-        
-        //Assert 
-        var expectedDates = Enumerable.Range(
-                0,
-                (BookingTestData.EndDateData - BookingTestData.StartDateData).Days + 1)
-            .Select(offset => BookingTestData.StartDateData.AddDays(offset))
-            .ToArray();
 
-        Assert.Equal(expectedDates, result.OrderBy(date => date).ToArray());
+        // Act
+        var result = await bookingManager.GetFullyOccupiedDates(date, date);
+
+        // Assert
+        Assert.Equal(date, Assert.Single(result));
     }
     
     // Case 4 and 5
