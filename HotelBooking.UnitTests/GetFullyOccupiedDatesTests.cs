@@ -5,6 +5,7 @@ using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using HotelBooking.UnitTests.TestData;
 using Xunit;
+using System;
 
 namespace HotelBooking.UnitTests;
 
@@ -153,6 +154,49 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
         //Assert 
         output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
         
+        Assert.Empty(result);
+    }
+    
+    // Case 8
+    [Fact]
+    public async Task GetFullyOccupiedDates_StartAfterEnd_ThrowsArgumentException()
+    {
+        //Arrange 
+        var bookingManager = MoqBookingManager.CreateBookingManager(
+            BookingTestData.DefaultRooms,
+            new List<Booking>()
+        );
+        
+        //Act 
+        Task result() => 
+            bookingManager
+                .GetFullyOccupiedDates(BookingTestData.EndDateData, BookingTestData.StartDateData);
+            
+        //Assert 
+        await Assert.ThrowsAsync<ArgumentException>(result);
+    }
+    
+    // Case 9 This test is failing on purpose to demonstrate a bug in the implementation.
+    // There's 3 rooms, 2 bookings for the room 1 and 1 booking for room 2, leaving room 3 without any bookings.
+    // The hotel should not be considered fully occupied.
+    [Fact]
+    public async Task GetFullyOccupiedDates_MultipleBookingsForSameRoom_DoesNotConsiderHotelFullyOccupied()
+    {
+        //Arrange 
+        var rooms = BookingTestData.DefaultRooms;
+        var bookings = new List<Booking>
+        {
+            BookingTestData.CreateBooking(1, rooms[0].Id),
+            BookingTestData.CreateBooking(2, rooms[0].Id),
+            BookingTestData.CreateBooking(3, rooms[1].Id)
+        };
+        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
+        
+        //Act 
+        var result = await bookingManager
+            .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.EndDateData);
+        
+        //Assert 
         Assert.Empty(result);
     }
 }
