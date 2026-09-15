@@ -7,8 +7,8 @@ namespace HotelBooking.UnitTests.TestData;
 
 public static class BookingTestData
 {
-    public static readonly DateTime StartDateData = DateTime.Today;
-    public static readonly DateTime EndDateData = StartDateData.AddDays(4);
+    public static readonly DateTime StartDateData = DateTime.Today.AddDays(1);
+    public static readonly DateTime EndDateData = StartDateData.AddDays(5);
 
     public static List<Room> DefaultRooms =>
     [
@@ -57,6 +57,30 @@ public static class BookingTestData
             CreateBooking(2, 2, StartDateData.AddDays(9), StartDateData.AddDays(13)),
             CreateBooking(3, 3, StartDateData.AddDays(11), StartDateData.AddDays(17))
         }
+    ];
+    
+    public static TheoryData<Booking> InactiveData =>
+    [
+
+        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8), false),
+
+        CreateBooking(1, 1, StartDateData.AddDays(10), StartDateData.AddDays(15), false),
+        
+        CreateBooking(1, 1, StartDateData.AddDays(8), StartDateData.AddDays(12), false),
+        
+        CreateBooking(1, 1, StartDateData.AddDays(32), StartDateData.AddDays(64), false),
+            
+    ];
+    
+    public static TheoryData<Booking> OneRoomBookedData =>
+    [
+
+        // One room occupied 
+        CreateBooking(1, 1, StartDateData.AddDays(2), StartDateData.AddDays(8)),
+        CreateBooking(1, 1, StartDateData.AddDays(12), StartDateData.AddDays(20)),
+        CreateBooking(1, 1, StartDateData.AddDays(32), StartDateData.AddDays(64)),
+        CreateBooking(1, 1, StartDateData.AddDays(3), StartDateData.AddDays(4)),
+        
     ];
     
     public static Booking CreateBooking(int id, int roomId, DateTime? startDate = null, DateTime? endDate = null, bool? isActive = true)

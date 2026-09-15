@@ -12,5 +12,10 @@ namespace HotelBooking.Core
         public int RoomId { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual Room Room { get; set; }
+
+        public override string ToString()
+        {
+            return "ID: " + Id + ", StartDate: " + StartDate + ", EndDate: " + EndDate + ", RoomID: " + RoomId + ", IsActive: " + IsActive + ", CustomerID: " + CustomerId  ;
+        }
     }
 }
