@@ -27,7 +27,6 @@ public static class BookingTestData
         },
 
         // Two rooms occupied (second theory case)
-
         new List<Booking>
         {
             CreateBooking(1, 1),
@@ -46,6 +45,7 @@ public static class BookingTestData
             CreateBooking(2, 2, StartDateData.AddDays(1), StartDateData.AddDays(15)),
             CreateBooking(3, 3, StartDateData.AddDays(2), StartDateData.AddDays(17))
         },
+        
         // second theory case
         new List<Booking>
         {
