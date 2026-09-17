@@ -2,7 +2,6 @@
 using HotelBooking.Infrastructure;
 using HotelBooking.Infrastructure.Repositories;
 using HotelBooking.Mvc.Models;
-using HotelBooking.UnitTests.Fakes;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
