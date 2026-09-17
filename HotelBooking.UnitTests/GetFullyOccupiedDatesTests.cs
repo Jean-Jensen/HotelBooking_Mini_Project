@@ -9,6 +9,7 @@ using System;
 
 namespace HotelBooking.UnitTests;
 
+[Collection("Sequential")]
 public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
 {
     private readonly ITestOutputHelper output = output; // output to console

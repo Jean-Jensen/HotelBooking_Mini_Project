@@ -9,6 +9,7 @@ using Xunit;
 
 namespace HotelBooking.UnitTests;
 
+[Collection("Sequential")]
 public class CreateBookingTests
 {
 

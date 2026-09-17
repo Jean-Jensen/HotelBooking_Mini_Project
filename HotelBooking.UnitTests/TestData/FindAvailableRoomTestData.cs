@@ -5,6 +5,7 @@ using Xunit;
 
 namespace HotelBooking.UnitTests.TestData;
 
+[Collection("Sequential")]
 public static class FindAvailableRoomTestData
 {
     // All dates used in the tests are relative to today.
