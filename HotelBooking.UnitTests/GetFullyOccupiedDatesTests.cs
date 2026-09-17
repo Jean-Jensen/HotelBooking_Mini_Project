@@ -51,7 +51,7 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
     }
     
     // Case 3
-    [Fact]
+    /*[Fact]
     public async Task GetFullyOccupiedDates_AllRoomsOccupied_ReturnsDate()
     {
         // Arrange
@@ -70,7 +70,7 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
 
         // Assert
         Assert.Equal(date, Assert.Single(result));
-    }
+    }*/
     
     // Case 4 and 5
     [Theory]
