@@ -25,7 +25,7 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin Sonar scan
-        run: dotnet sonarscanner begin /k:"HotelBooking_Mini_Project" /o:"jean-jensen" /d:sonar.token="$TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+        run: dotnet sonarscanner begin /k:"HotelBooking_Mini_Project" /o:"github-jean-jensen" /d:sonar.token="$TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
 
       - name: Restore dependencies
         run: dotnet restore
