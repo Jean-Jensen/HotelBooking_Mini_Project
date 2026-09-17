@@ -33,7 +33,7 @@ jobs:
         run: dotnet build --no-restore --configuration Debug
 
       - name: Collect code coverage using Coverlet
-        run: coverlet ./HotelBooking.UnitTests/bin/HotelBooking.UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+        run: coverlet ./HotelBooking.UnitTests/bin/Debug/HotelBooking.UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
 
       - name: End Sonar scan
         run: dotnet sonarscanner end /d:sonar.token="$TOKEN"
