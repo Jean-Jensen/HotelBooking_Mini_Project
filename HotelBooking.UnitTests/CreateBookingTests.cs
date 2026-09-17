@@ -303,4 +303,6 @@ public class CreateBookingTests
         Assert.False(result);
         MoqBookingManager.GetBookingRepo().Verify(x => x.AddAsync(newBooking), Times.Never); //verify add was called
     }
+    
+    //lakiofjoiwhjfiowjosiefoiwsfhweiguehisdhgfsodifj
 }
