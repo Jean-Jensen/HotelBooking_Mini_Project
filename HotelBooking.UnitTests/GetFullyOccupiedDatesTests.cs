@@ -51,7 +51,7 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
     }
     
     // Case 3
-    /*[Fact]
+    [Fact]
     public async Task GetFullyOccupiedDates_AllRoomsOccupied_ReturnsDate()
     {
         // Arrange
@@ -70,7 +70,7 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
 
         // Assert
         Assert.Equal(date, Assert.Single(result));
-    }*/
+    }
     
     // Case 4 and 5
     [Theory]
@@ -90,13 +90,11 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
             .GetFullyOccupiedDates(BookingTestData.StartDateData, BookingTestData.StartDateData.AddDays(30));
         
         //Assert 
-        output.WriteLine($"Fully occupied dates: {string.Join(", ", result)}");
-        
         var expectedDates = expectedDayOffsets
             .Select(offset => BookingTestData.StartDateData.AddDays(offset))
             .ToArray();
 
-        Assert.Equal(expectedDates, result.OrderBy(date => date).ToArray());
+        Assert.Equal(expectedDates, result.OrderBy(date => date.Date).ToArray());
        
     }
     
@@ -173,7 +171,8 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
     // Case 9 This test is failing on purpose to demonstrate a bug in the implementation.
     // There's 3 rooms, 2 bookings for the room 1 and 1 booking for room 2, leaving room 3 without any bookings.
     // The hotel should not be considered fully occupied.
-    /*[Fact]
+    // GetFullyOccupiedDates should count distinct occupied rooms
+    [Fact]
     public async Task GetFullyOccupiedDates_MultipleBookingsForSameRoom_DoesNotConsiderHotelFullyOccupied()
     {
         //Arrange 
@@ -192,5 +191,5 @@ public class GetFullyOccupiedDatesTests(ITestOutputHelper output)
         
         //Assert 
         Assert.Empty(result);
-    }*/
+    }
 }

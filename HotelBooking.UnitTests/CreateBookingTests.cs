@@ -118,8 +118,10 @@ public class CreateBookingTests
     public async Task CreateBooking_AllRoomsBookedForPeriod_ShouldReturnFalse(List<Booking> bookings, int[] expectedDayOffsets)
     {
         //Arrange
-        var rooms = BookingTestData.DefaultRooms;
-        var bookingManager = MoqBookingManager.CreateBookingManager(rooms, bookings);
+        var rooms = BookingTestData
+            .DefaultRooms;
+        var bookingManager = MoqBookingManager
+            .CreateBookingManager(rooms, bookings);
         
         Booking newBooking = new Booking
         {
@@ -130,8 +132,8 @@ public class CreateBookingTests
         };
         
         //Act
-        var result = await bookingManager.CreateBooking(newBooking); 
-
+        var result = await bookingManager
+            .CreateBooking(newBooking); 
         //Assert
         Assert.False(result);
         
@@ -224,6 +226,7 @@ public class CreateBookingTests
     
     //Case 19
     [Fact]
+     //                UnitOfWork_       Scenario_     ExpectedResult
     public async Task CreateBooking_OneDayBooking_ShouldReturnTrue()
     {
         List<Room> rooms = [
@@ -271,7 +274,9 @@ public class CreateBookingTests
 
         //Assert
         Assert.True(result);
-        MoqBookingManager.GetBookingRepo().Verify(x => x.AddAsync(newBooking), Times.Once); //verify add was called
+        MoqBookingManager.GetBookingRepo()
+            .Verify(x => 
+                x.AddAsync(newBooking), Times.Once); 
     }
     
     //Case 21
