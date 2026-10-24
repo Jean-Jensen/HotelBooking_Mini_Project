@@ -16,9 +16,8 @@ public class CreateBookingStepDefinitions
     private int targetRoomId;
     private BookingManager manager = MoqBookingManager.CreateBookingManager(new List<Room>(), new List<Booking>());
     private Task<bool> _act { get; set; }
-    
-    [Given("start and end date are before room A is occupied")]
-    public void GivenStartAndEndDateAreBeforeRoomAIsOccupied()
+
+    private void SetupManager()
     {
         Room room1 = new Room()
         {
@@ -35,7 +34,13 @@ public class CreateBookingStepDefinitions
             RoomId = 1,
         };
         manager = MoqBookingManager.CreateBookingManager(new List<Room>{room1}, new List<Booking>{booking1});
-
+    }
+    
+    [Given("start and end date are before room A is occupied")]
+    public void GivenStartAndEndDateAreBeforeRoomAIsOccupied()
+    {
+        SetupManager();
+        
         startDate = DateTime.Today.AddDays(2);
         endDate = DateTime.Today.AddDays(5);
         targetRoomId = 1;
@@ -112,5 +117,34 @@ public class CreateBookingStepDefinitions
     public async Task ThenBookingShouldThrowAnError()
     {
         await Assert.ThrowsAsync<ArgumentException>(() => _act);
+    }
+
+    [Given("Start date is before occupied range")]
+    public void GivenStartDateIsBeforeOccupiedRange()
+    {
+        SetupManager();
+        
+        startDate = DateTime.Today.AddDays(1);
+        targetRoomId = 1;
+    }
+
+    [Given("End date is at the start of occupied range")]
+    public void GivenEndDateIsAtTheStartOfOccupiedRange()
+    {
+        endDate = DateTime.Today.AddDays(7);
+    }
+
+    [Then("Booking should not be created")]
+    public async Task ThenBookingShouldNotBeCreated()
+    {
+        bool result = await _act;
+        
+        Assert.False(result);
+    }
+
+    [Given("End date is at the end of occupied range")]
+    public void GivenEndDateIsAtTheEndOfOccupiedRange()
+    {
+        endDate = DateTime.Today.AddDays(10);
     }
 }
