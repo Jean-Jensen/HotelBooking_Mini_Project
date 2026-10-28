@@ -41,7 +41,7 @@
 </table>
 
 @*List of bookings*@
-<table class="table">
+<table class="other-table" id="other-table" name="other-table">
     <thead>
         <tr>
             <th>
@@ -61,7 +61,7 @@
             </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="bookingbody">
 @foreach (var item in Model.Bookings) {
         <tr>
             <td>
