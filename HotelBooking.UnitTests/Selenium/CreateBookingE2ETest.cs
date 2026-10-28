@@ -57,8 +57,6 @@ public class CreateBookingE2ETest : IDisposable
         //Arrange
         var startDate = DateTime.Today.AddDays(1);
         
-        
-        
         //Act
         driver.Navigate().GoToUrl(createURL);
         
@@ -89,7 +87,8 @@ public class CreateBookingE2ETest : IDisposable
 
         driver.FindElement(createBtnSelector).Click(); //click the create button
         
-        driver.Navigate().GoToUrl(bookingsURL); //switch to booking page
+        ////// switch to booking page ///////
+        driver.Navigate().GoToUrl(bookingsURL); 
 
         var bookingRows = driver.FindElements(bookingRowSelector); //get booking rows
         
