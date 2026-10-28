@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "1687f5bd-1d6b-4b04-a891-a9259304966a",
+		"name": "HotelBooking_https",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37901037"
+	},
+	"item": [
+		{
+			"name": "Create Booking - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is acceptable\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const startDate = new Date();",
+							"startDate.setDate(startDate.getDate() + 20);",
+							"",
+							"const endDate = new Date(startDate);",
+							"endDate.setDate(endDate.getDate() + 3);",
+							"",
+							"pm.variables.set(\"startDate\", startDate.toISOString().split(\"T\")[0]);",
+							"pm.variables.set(\"endDate\", endDate.toISOString().split(\"T\")[0]);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"startDate\": \"{{startDate}}\",\n  \"endDate\": \"{{endDate}}\",\n  \"customerId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/Bookings"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Booking - Past Start Date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invalid booking date is rejected\", function () {",
+							"    pm.response.to.have.status(500);",
+							"});",
+							"",
+							"pm.test(\"Response identifies the argument exception\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"ArgumentException\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"startDate\": \"2026-10-20\",\n  \"endDate\": \"2026-10-21\",\n  \"customerId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5000/Bookings"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Rooms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"At least one room is returned\", function () {",
+							"    const rooms = pm.response.json();",
+							"    pm.expect(rooms).to.be.an(\"array\").that.is.not.empty;",
+							"});",
+							"",
+							"pm.test(\"Each room has an ID\", function () {",
+							"    const rooms = pm.response.json();",
+							"",
+							"    rooms.forEach(function (room) {",
+							"        pm.expect(room).to.have.property(\"id\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/rooms"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Bookings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"At least one booking is returned\", function () {",
+							"    const bookings = pm.response.json();",
+							"    pm.expect(bookings).to.be.an(\"array\").that.is.not.empty;",
+							"});",
+							"",
+							"pm.test(\"Each booking has the required properties\", function () {",
+							"    const bookings = pm.response.json();",
+							"",
+							"    bookings.forEach(function (booking) {",
+							"        pm.expect(booking).to.have.property(\"id\");",
+							"        pm.expect(booking).to.have.property(\"startDate\");",
+							"        pm.expect(booking).to.have.property(\"endDate\");",
+							"        pm.expect(booking).to.have.property(\"isActive\");",
+							"        pm.expect(booking).to.have.property(\"customerId\");",
+							"        pm.expect(booking).to.have.property(\"roomId\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5000/Bookings"
+			},
+			"response": []
+		}
+	]
+}
