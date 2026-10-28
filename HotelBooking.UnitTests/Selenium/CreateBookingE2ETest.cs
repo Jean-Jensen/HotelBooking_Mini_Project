@@ -31,6 +31,7 @@ public class CreateBookingE2ETest : IDisposable
 
     private WebDriverWait wait;
 
+    //setup
     public CreateBookingE2ETest(ITestOutputHelper output)
     {
         this.output = output;
@@ -43,6 +44,7 @@ public class CreateBookingE2ETest : IDisposable
         wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
     }
     
+    //called after tests are done running
     public void Dispose()
     {
         driver.Quit();
