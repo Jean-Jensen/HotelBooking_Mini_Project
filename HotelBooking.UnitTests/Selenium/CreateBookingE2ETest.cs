@@ -55,8 +55,7 @@ public class CreateBookingE2ETest : IDisposable
         //Arrange
         var startDate = DateTime.Today.AddDays(1);
         
-        var startDateField = driver.FindElement(startDateSelector);
-        var endDateField = driver.FindElement(endDateSelector);
+        
         
         //Act
         driver.Navigate().GoToUrl(createURL);
@@ -73,6 +72,7 @@ public class CreateBookingE2ETest : IDisposable
         }
         
         //Enter Start Date
+        var startDateField = driver.FindElement(startDateSelector);
         startDateField.Click(); //click on textfield
         //this isn't what we want the textfield to look like, it's what we want selenium to type in order.
         //so in the actual program, we would just type the day, month and year, so here we do the same
@@ -80,6 +80,7 @@ public class CreateBookingE2ETest : IDisposable
         startDateField.SendKeys(dateToSend); //enter date (I could not find how to use the calendar)
 
         //Enter End Date
+        var endDateField = driver.FindElement(endDateSelector);
         endDateField.Click();
         dateToSend = startDate.AddDays(1).Day.ToString() + startDate.AddDays(1).Month.ToString() + startDate.AddDays(1).Year.ToString();
         endDateField.SendKeys(dateToSend); 
