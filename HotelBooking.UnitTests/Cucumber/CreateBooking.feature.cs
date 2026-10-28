@@ -105,7 +105,7 @@ namespace HotelBooking.UnitTests.Cucumber
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Cucumber/CreateBooking.feature.ndjson", 7);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Cucumber/CreateBooking.feature.ndjson", 10);
         }
         
         async System.Threading.Tasks.ValueTask Xunit.IAsyncLifetime.InitializeAsync()
@@ -169,17 +169,17 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Xunit.FactAttribute(DisplayName="Start and end date are before room is occupied")]
+        [global::Xunit.FactAttribute(DisplayName="Start date is before and end date is after room is occupied")]
         [global::Xunit.TraitAttribute("FeatureTitle", "CreateBooking")]
-        [global::Xunit.TraitAttribute("Description", "Start and end date are before room is occupied")]
+        [global::Xunit.TraitAttribute("Description", "Start date is before and end date is after room is occupied")]
         [global::Xunit.TraitAttribute("Category", "mytag")]
-        public async global::System.Threading.Tasks.Task StartAndEndDateAreBeforeRoomIsOccupied()
+        public async global::System.Threading.Tasks.Task StartDateIsBeforeAndEndDateIsAfterRoomIsOccupied()
         {
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "1";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start and end date are before room is occupied", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date is before and end date is after room is occupied", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 14
@@ -193,12 +193,51 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 15
-    await testRunner.GivenAsync("start and end date are before room A is occupied", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("Start date is before room A is occupied", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 16
-    await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.AndAsync("end date is after room A is occupied", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 17
+    await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 18
+    await testRunner.ThenAsync("Booking should not be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.FactAttribute(DisplayName="Start and end date are before room is occupied")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "CreateBooking")]
+        [global::Xunit.TraitAttribute("Description", "Start and end date are before room is occupied")]
+        [global::Xunit.TraitAttribute("Category", "mytag")]
+        public async global::System.Threading.Tasks.Task StartAndEndDateAreBeforeRoomIsOccupied()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "mytag"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "2";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start and end date are before room is occupied", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 22
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 23
+    await testRunner.GivenAsync("start and end date are before room A is occupied", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 24
+    await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 25
     await testRunner.ThenAsync("Booking should be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -214,11 +253,11 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "2";
+            string pickleIndex = "3";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date is before occupied, end date is at start of occupied range", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 21
+#line 29
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -228,16 +267,16 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 22
+#line 30
     await testRunner.GivenAsync("Start date is before occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 23
+#line 31
     await testRunner.AndAsync("End date is at the start of occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 24
+#line 32
     await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 25
+#line 33
     await testRunner.ThenAsync("Booking should not be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -253,11 +292,11 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "3";
+            string pickleIndex = "4";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date is before occupied, end date is at end of occupied range", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 29
+#line 37
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -267,17 +306,101 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 30
+#line 38
      await testRunner.GivenAsync("Start date is before occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 31
+#line 39
      await testRunner.AndAsync("End date is at the end of occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 32
+#line 40
      await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 33
+#line 41
      await testRunner.ThenAsync("Booking should not be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.FactAttribute(DisplayName="Start date is at the end of occupied range, end date is after the room is occupie" +
+            "d")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "CreateBooking")]
+        [global::Xunit.TraitAttribute("Description", "Start date is at the end of occupied range, end date is after the room is occupie" +
+            "d")]
+        [global::Xunit.TraitAttribute("Category", "mytag")]
+        public async global::System.Threading.Tasks.Task StartDateIsAtTheEndOfOccupiedRangeEndDateIsAfterTheRoomIsOccupied()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "mytag"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "5";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date is at the end of occupied range, end date is after the room is occupie" +
+                    "d", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 45
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 46
+    await testRunner.GivenAsync("Start date is at the end of occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 47
+    await testRunner.AndAsync("End date is after the room is occupied", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 48
+    await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 49
+    await testRunner.ThenAsync("Booking should not be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Xunit.FactAttribute(DisplayName="Start date is in the beginning of the occupied range, end date is at the end of o" +
+            "ccupied range")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "CreateBooking")]
+        [global::Xunit.TraitAttribute("Description", "Start date is in the beginning of the occupied range, end date is at the end of o" +
+            "ccupied range")]
+        [global::Xunit.TraitAttribute("Category", "mytag")]
+        public async global::System.Threading.Tasks.Task StartDateIsInTheBeginningOfTheOccupiedRangeEndDateIsAtTheEndOfOccupiedRange()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "mytag"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "6";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date is in the beginning of the occupied range, end date is at the end of o" +
+                    "ccupied range", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 53
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 54
+    await testRunner.GivenAsync("Start date is in the beginning of occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 55
+    await testRunner.AndAsync("End date is at the end of occupied range", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 56
+    await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 57
+    await testRunner.ThenAsync("Booking should not be created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -292,11 +415,11 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "4";
+            string pickleIndex = "7";
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Start date before today", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 37
+#line 61
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -306,13 +429,13 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 38
+#line 62
     await testRunner.GivenAsync("start date is before today", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 39
+#line 63
     await testRunner.WhenAsync("I try to book the room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 40
+#line 64
     await testRunner.ThenAsync("Booking should throw an error", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
