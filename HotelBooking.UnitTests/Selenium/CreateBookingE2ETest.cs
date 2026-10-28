@@ -7,19 +7,27 @@ using Xunit;
 
 namespace HotelBooking.UnitTests.Selenium;
 
+//fyi: you need to have the program running to do the tests, because selenium tries to go to the URL
+//and if the program isnt running, it'll just see a 404 and return an error.
+//that means if you change anything in the main program, you have to restart it before you see your changes on the tests.
+//Also, the data that gets added here is actually put into the database. since it's an in-memory db, you can restart the program to reset it.
 public class CreateBookingE2ETest : IDisposable
 {
     private readonly ITestOutputHelper output; //in case we need to output to console
     
     public readonly IWebDriver driver;
 
+    //URLs
     private string createURL = "http://localhost:5000/Bookings/Create";
     private string bookingsURL = "http://localhost:5000/Bookings";
     private string roomsURL = "http://localhost:5000/Rooms";
 
+    //selectors 
+    private readonly By startDateSelector = By.Id("StartDate");
+    private readonly By endDateSelector = By.Id("EndDate");
     private readonly By createBtnSelector = By.XPath("//input[@value='Create']");
-    private readonly By bookingRowSelector = By.CssSelector(".other-table tbody tr");
-    private readonly By startDateInRowSelector = By.CssSelector(" td:First-Child");
+    private readonly By bookingRowSelector = By.CssSelector(".other-table tbody tr"); //I had to change the class of the table to differentiate it from the other table in this view
+    private readonly By tableDataSelector = By.CssSelector("td");
 
     private WebDriverWait wait;
 
@@ -32,7 +40,7 @@ public class CreateBookingE2ETest : IDisposable
 
         driver = new ChromeDriver(Environment.CurrentDirectory, options);
         
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
     }
     
     public void Dispose()
@@ -40,16 +48,20 @@ public class CreateBookingE2ETest : IDisposable
         driver.Quit();
     }
     
+    //baseline test, so we know things are working correctly
     [Fact]
     public void CreateBookingSuccessfully()
     {
+        //Arrange
         var startDate = DateTime.Today.AddDays(1);
         
+        var startDateField = driver.FindElement(startDateSelector);
+        var endDateField = driver.FindElement(endDateSelector);
+        
+        //Act
         driver.Navigate().GoToUrl(createURL);
         
-        //Select from drop box/form
-        //technically not necessary but could be useful
-        //not even sure if code works rn
+        //Select customer from drop box/form
         var form = driver.FindElement(By.Id("CustomerId"));
         form.Click();
         foreach (var option in form.FindElements(By.TagName("option")))
@@ -61,47 +73,52 @@ public class CreateBookingE2ETest : IDisposable
         }
         
         //Enter Start Date
-        var startDateField = driver.FindElement(By.Id("StartDate")); //grab element
         startDateField.Click(); //click on textfield
-        string dateToSend = startDate.Day.ToString() + startDate.Month.ToString() + startDate.Year.ToString();
-        startDateField.SendKeys("29102026"); //enter date (I could not find how to use the calendar)
-        
+        //this isn't what we want the textfield to look like, it's what we want selenium to type in order.
+        //so in the actual program, we would just type the day, month and year, so here we do the same
+        string dateToSend = startDate.Day.ToString() + startDate.Month.ToString() + startDate.Year.ToString(); 
+        startDateField.SendKeys(dateToSend); //enter date (I could not find how to use the calendar)
 
         //Enter End Date
-        //driver.FindElement(By.Id("EndDate")).Click(); //click on calender
-        //driver.FindElement(By.LinkText(startDate.AddDays(1).Day.ToString())).Click(); //click on specific date
-
-        var endDateField = driver.FindElement(By.Id("EndDate"));
         endDateField.Click();
-        dateToSend = startDate.Day.ToString() + startDate.Month.ToString() + startDate.Year.ToString();
-        endDateField.SendKeys("30102026");
+        dateToSend = startDate.AddDays(1).Day.ToString() + startDate.AddDays(1).Month.ToString() + startDate.AddDays(1).Year.ToString();
+        endDateField.SendKeys(dateToSend); 
 
-        driver.FindElement(createBtnSelector).Click();
+        driver.FindElement(createBtnSelector).Click(); //click the create button
         
-        driver.Navigate().GoToUrl(bookingsURL);
+        driver.Navigate().GoToUrl(bookingsURL); //switch to booking page
 
-        var bookingRows = driver.FindElements(bookingRowSelector);
+        var bookingRows = driver.FindElements(bookingRowSelector); //get booking rows
         
-        wait.Until(d => d.FindElements(bookingRowSelector).Count > 0);
+        wait.Until(d => d.FindElements(bookingRowSelector).Count > 3); //wait until there are enough rows (or throw error)
 
         string bookingStartDate = "";
+        string bookingEndDate = "";
+        string customer = "";
 
         foreach (var row in bookingRows)
         {
-            var text = row.FindElement(startDateInRowSelector).Text;
-
-            //var columns = row.FindElements(By.TagName(".other-table td"));
+            var columns = row.FindElements(tableDataSelector);
             
-            output.WriteLine("StartDate: " + text);
-            //output.WriteLine("test: " + columns[0].Text);
+            output.WriteLine("StartDate: " + columns[0].Text);
             
-            if (text == startDate.ToString())
+            output.WriteLine("test: " + columns[1].Text);
+            
+            //if data matches our booking
+            if (columns[0].Text == startDate.ToString() 
+                && columns[1].Text == startDate.AddDays(1).ToString()
+                && columns[3].Text == "Jane Doe")
             {
-                bookingStartDate = text;
+                bookingStartDate = columns[0].Text;
+                bookingEndDate = columns[1].Text;
+                customer = columns[3].Text;
             }
         }
         
+        //Assert
         Assert.Equal(startDate.ToString(), bookingStartDate);
+        Assert.Equal(startDate.AddDays(1).ToString(), bookingEndDate);
+        Assert.Equal("Jane Doe", customer);
 
     }
     
