@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -8,7 +9,7 @@ using Xunit;
 namespace HotelBooking.UnitTests.Selenium;
 
 //fyi: you need to have the program running to do the tests, because selenium tries to go to the URL
-//and if the program isnt running, it'll just see a 404 and return an error.
+//and if the program isn't running, it'll just see a 404 and return an error.
 //that means if you change anything in the main program, you have to restart it before you see your changes on the tests.
 //Also, the data that gets added here is actually put into the database. since it's an in-memory db, you can restart the program to reset it.
 public class CreateBookingE2ETest : IDisposable
@@ -27,17 +28,37 @@ public class CreateBookingE2ETest : IDisposable
     private readonly By endDateSelector = By.Id("EndDate");
     private readonly By createBtnSelector = By.XPath("//input[@value='Create']");
     private readonly By bookingRowSelector = By.CssSelector(".other-table tbody tr"); //I had to change the class of the table to differentiate it from the other table in this view
-    private readonly By tableDataSelector = By.CssSelector("td");
-
+    private readonly By tableDataSelector = By.CssSelector("td"); //grabs all tabledata objects
+    private readonly By errorTextSelector = By.CssSelector("div");
+    // [class='text-danger']
+    // .text-danger
+    // #error-text
+    // div[class='text-danger']
+    // [id='error-text']
+    // div[id='error-text']
+    // By.XPath("//div[@class='text-danger']");
+    // By.Id("error-text");
+    // By.CssSelector("[id='error-text']");
+    // By.XPath("//div[@id='error-text']");
+    // By.CssSelector("div.text-danger")
+    // h4[class='text-danger']
+    // By.XPath("//h4[@class='text-danger']");
+    
+    
+    
+    //dates
+    DateTime occupiedStartDate = DateTime.Today.AddDays(4);
+    DateTime occupiedEndDate = DateTime.Today.AddDays(18);
+    
     private WebDriverWait wait;
 
     //setup
     public CreateBookingE2ETest(ITestOutputHelper output)
     {
-        this.output = output;
+        this.output = output; 
         
         ChromeOptions options = new ChromeOptions();
-        options.AddArgument("headless");
+        options.AddArgument("headless"); //so window isnt displayed
 
         driver = new ChromeDriver(Environment.CurrentDirectory, options);
         
@@ -49,17 +70,9 @@ public class CreateBookingE2ETest : IDisposable
     {
         driver.Quit();
     }
-    
-    //baseline test, so we know things are working correctly
-    [Fact]
-    public void CreateBookingSuccessfully()
+
+    private void CreateBookingOnWeb(DateTime startDate, DateTime endDate)
     {
-        //Arrange
-        var startDate = DateTime.Today.AddDays(1);
-        
-        //Act
-        driver.Navigate().GoToUrl(createURL);
-        
         //Select customer from drop box/form
         var form = driver.FindElement(By.Id("CustomerId"));
         form.Click();
@@ -82,10 +95,25 @@ public class CreateBookingE2ETest : IDisposable
         //Enter End Date
         var endDateField = driver.FindElement(endDateSelector);
         endDateField.Click();
-        dateToSend = startDate.AddDays(1).Day.ToString() + startDate.AddDays(1).Month.ToString() + startDate.AddDays(1).Year.ToString();
+        dateToSend = endDate.Day.ToString() + endDate.Month.ToString() + endDate.Year.ToString();
         endDateField.SendKeys(dateToSend); 
-
+        
         driver.FindElement(createBtnSelector).Click(); //click the create button
+    }
+    
+    
+    //baseline test, so we know things are working correctly
+    //could also be considered case #3
+    [Fact]
+    public void CreateBookingSuccessfully()
+    {
+        //Arrange
+        var startDate = DateTime.Today.AddDays(1);
+        
+        //Act
+        driver.Navigate().GoToUrl(createURL);
+        
+        CreateBookingOnWeb(startDate, startDate.AddDays(1));
         
         ////// switch to booking page ///////
         driver.Navigate().GoToUrl(bookingsURL); 
@@ -100,10 +128,9 @@ public class CreateBookingE2ETest : IDisposable
 
         foreach (var row in bookingRows)
         {
-            var columns = row.FindElements(tableDataSelector);
+            var columns = row.FindElements(tableDataSelector); //grab all td/columns for this specific row
             
             output.WriteLine("StartDate: " + columns[0].Text);
-            
             output.WriteLine("test: " + columns[1].Text);
             
             //if data matches our booking
@@ -123,5 +150,29 @@ public class CreateBookingE2ETest : IDisposable
         Assert.Equal("Jane Doe", customer);
 
     }
-    
+
+    [Fact]
+    public void CreateBooking_StartDateAtStartOfOccupiedPeriod_ShouldNotCreateBooking()
+    {
+        //Arrange
+        
+        
+        //Act
+        driver.Navigate().GoToUrl(createURL);
+        
+        CreateBookingOnWeb(occupiedStartDate, occupiedEndDate.AddDays(6));
+
+        Thread.Sleep(1000);        
+        
+        string errorText = driver.FindElement(errorTextSelector).Text;
+        
+        output.WriteLine(errorText);
+        
+        //Assert
+        Assert.NotNull(errorText);
+        Assert.NotEmpty(errorText);
+        Assert.Equal("ArgumentException: The start date cannot be in the past or later than the end date.", errorText);
+    }
+
+
 }
