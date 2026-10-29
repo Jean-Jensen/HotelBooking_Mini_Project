@@ -30,21 +30,6 @@ public class CreateBookingE2ETest : IDisposable
     private readonly By bookingRowSelector = By.CssSelector(".other-table tbody tr"); //I had to change the class of the table to differentiate it from the other table in this view
     private readonly By tableDataSelector = By.CssSelector("td"); //grabs all tabledata objects
     private readonly By errorTextSelector = By.CssSelector("div");
-    // [class='text-danger']
-    // .text-danger
-    // #error-text
-    // div[class='text-danger']
-    // [id='error-text']
-    // div[id='error-text']
-    // By.XPath("//div[@class='text-danger']");
-    // By.Id("error-text");
-    // By.CssSelector("[id='error-text']");
-    // By.XPath("//div[@id='error-text']");
-    // By.CssSelector("div.text-danger")
-    // h4[class='text-danger']
-    // By.XPath("//h4[@class='text-danger']");
-    
-    
     
     //dates
     DateTime occupiedStartDate = DateTime.Today.AddDays(4);
