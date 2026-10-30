@@ -166,7 +166,10 @@ public class CreateBookingStepDefinitions
     [Given("{int} is at the start or end of occupied range")]
     public void GivenIsAtTheStartOrEndOfOccupiedRange(int startDates)
     {
+        SetupManager();
+        
         startDate = DateTime.Today.AddDays(startDates);
+        targetRoomId = 1;
     }
 
     [Given("{int} is after the room is occupied")]
