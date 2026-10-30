@@ -63,8 +63,9 @@ Scenario Outline: Start date is in the beginning of the occupied range, end date
 
 Examples:
     | startDates | endDates |
-    |          7 |      10  |
-    |         10 |      10  |
+    |          7 |        7 |
+    |          7 |       10 |
+    |         10 |       10 |
 
     #not a case, to showcase an error
 @mytag

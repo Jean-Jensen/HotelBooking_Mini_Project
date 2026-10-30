@@ -84,9 +84,6 @@ public class CreateBookingStepDefinitions
             CustomerId = 0,
             RoomId = targetRoomId
         };
-
-        //CreateBooking returns a bool, so we could just get the result in this method and check it in the next.
-        //but this doesn't account for if it throws an error, which we want the next step to know about
         _act = manager.CreateBooking(newBooking);
     }
 
