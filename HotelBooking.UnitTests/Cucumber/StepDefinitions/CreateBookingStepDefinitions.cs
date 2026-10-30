@@ -163,27 +163,21 @@ public class CreateBookingStepDefinitions
         endDate = DateTime.Today.AddDays(13);
     }
 
-    [Given("Start date is at the end of occupied range")]
-    public void GivenStartDateIsAtTheEndOfOccupiedRange()
+    [Given("{int} is at the start or end of occupied range")]
+    public void GivenIsAtTheStartOrEndOfOccupiedRange(int startDates)
     {
-        SetupManager();
-        
-        startDate = DateTime.Today.AddDays(10);
-        targetRoomId = 1;
+        startDate = DateTime.Today.AddDays(startDates);
     }
 
-    [Given("End date is after the room is occupied")]
-    public void GivenEndDateIsAfterTheRoomIsOccupied()
+    [Given("{int} is after the room is occupied")]
+    public void GivenIsAfterTheRoomIsOccupied(int endDates)
     {
-        endDate = DateTime.Today.AddDays(13);
+        endDate = DateTime.Today.AddDays(endDates);
     }
 
-    [Given("Start date is in the beginning of occupied range")]
-    public void GivenStartDateIsInTheBeginningOfOccupiedRange()
+    [Given("{int} is at the end of occupied range")]
+    public void GivenIsAtTheEndOfOccupiedRange(int endDates)
     {
-        SetupManager();
-        
-        startDate = DateTime.Today.AddDays(7);
-        targetRoomId = 1;
+        endDate = DateTime.Today.AddDays(endDates);
     }
 }
