@@ -55,9 +55,10 @@ public class CreateBookingE2ETest : IDisposable
     public void CreateBookingSuccessfully()
     {
         //Arrange
-        var startDate = DateTime.Today.AddDays(1);
-        
-        
+        var startDate = DateTime.Today.AddDays(2);
+        var endDate = DateTime.Today.AddDays(3);
+        output.WriteLine("input start date: " + startDate);
+        output.WriteLine("input end date: " + startDate.AddDays(1));
         
         //Act
         driver.Navigate().GoToUrl(createURL);
@@ -76,17 +77,22 @@ public class CreateBookingE2ETest : IDisposable
         //Enter Start Date
         var startDateField = driver.FindElement(startDateSelector);
         startDateField.Click(); //click on textfield
-        //this isn't what we want the textfield to look like, it's what we want selenium to type in order.
-        //so in the actual program, we would just type the day, month and year, so here we do the same
-        string dateToSend = startDate.Day.ToString() + startDate.Month.ToString() + startDate.Year.ToString(); 
+        var day = startDate.Day.ToString().Length < 2 ? "0" + startDate.Day.ToString() : startDate.Day.ToString();
+        var month = startDate.Month.ToString().Length < 2 ? "0" + startDate.Month.ToString() : startDate.Month.ToString();
+        //in the actual program, we would just type the day, month and year, so here we do the same (instead of typing in slashes or dashes)
+        string dateToSend = day + month + startDate.Year.ToString(); 
+        output.WriteLine(dateToSend);
         startDateField.SendKeys(dateToSend); //enter date (I could not find how to use the calendar)
-
+        
         //Enter End Date
         var endDateField = driver.FindElement(endDateSelector);
         endDateField.Click();
-        dateToSend = startDate.AddDays(1).Day.ToString() + startDate.AddDays(1).Month.ToString() + startDate.AddDays(1).Year.ToString();
+        day = endDate.Day.ToString().Length < 2 ? "0" + endDate.Day.ToString() : endDate.Day.ToString();
+        month = endDate.Month.ToString().Length < 2 ? "0" + endDate.Month.ToString() : endDate.Month.ToString();
+        dateToSend = day + month + endDate.Year.ToString();
+        output.WriteLine(dateToSend);
         endDateField.SendKeys(dateToSend); 
-
+        
         driver.FindElement(createBtnSelector).Click(); //click the create button
         
         driver.Navigate().GoToUrl(bookingsURL); //switch to booking page
