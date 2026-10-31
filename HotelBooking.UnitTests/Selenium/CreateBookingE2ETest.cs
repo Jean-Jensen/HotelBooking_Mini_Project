@@ -21,7 +21,6 @@ public class CreateBookingE2ETest : IDisposable
     //URLs
     private string createURL = "http://localhost:5000/Bookings/Create";
     private string bookingsURL = "http://localhost:5000/Bookings";
-    private string roomsURL = "http://localhost:5000/Rooms";
 
     //selectors 
     private readonly By startDateSelector = By.Id("StartDate");
@@ -29,7 +28,7 @@ public class CreateBookingE2ETest : IDisposable
     private readonly By createBtnSelector = By.XPath("//input[@value='Create']");
     private readonly By bookingRowSelector = By.CssSelector(".other-table tbody tr"); //I had to change the class of the table to differentiate it from the other table in this view
     private readonly By tableDataSelector = By.CssSelector("td"); //grabs all tabledata objects
-    private readonly By errorTextSelector = By.CssSelector("div");
+    private readonly By errorTextSelector = By.CssSelector("h4.text-danger");
     
     //dates
     DateTime occupiedStartDate = DateTime.Today.AddDays(4);
@@ -72,23 +71,25 @@ public class CreateBookingE2ETest : IDisposable
         //Enter Start Date
         var startDateField = driver.FindElement(startDateSelector);
         startDateField.Click(); //click on textfield
-        //this isn't what we want the textfield to look like, it's what we want selenium to type in order.
-        //so in the actual program, we would just type the day, month and year, so here we do the same
-        string dateToSend = startDate.Day.ToString() + startDate.Month.ToString() + startDate.Year.ToString(); 
+        var day = startDate.Day.ToString().Length < 2 ? "0" + startDate.Day.ToString() : startDate.Day.ToString();
+        var month = startDate.Month.ToString().Length < 2 ? "0" + startDate.Month.ToString() : startDate.Month.ToString();
+        //in the actual program, we would just type the day, month and year, so here we do the same (instead of typing in slashes or dashes)
+        string dateToSend = day + month + startDate.Year.ToString(); 
         startDateField.SendKeys(dateToSend); //enter date (I could not find how to use the calendar)
-
+        
         //Enter End Date
         var endDateField = driver.FindElement(endDateSelector);
         endDateField.Click();
-        dateToSend = endDate.Day.ToString() + endDate.Month.ToString() + endDate.Year.ToString();
+        day = endDate.Day.ToString().Length < 2 ? "0" + endDate.Day.ToString() : endDate.Day.ToString();
+        month = endDate.Month.ToString().Length < 2 ? "0" + endDate.Month.ToString() : endDate.Month.ToString();
+        dateToSend = day + month + endDate.Year.ToString();
         endDateField.SendKeys(dateToSend); 
         
         driver.FindElement(createBtnSelector).Click(); //click the create button
     }
     
     
-    //baseline test, so we know things are working correctly
-    //could also be considered case #3
+    //Case #3
     [Fact]
     public void CreateBookingSuccessfully()
     {
@@ -135,9 +136,10 @@ public class CreateBookingE2ETest : IDisposable
         Assert.Equal("Jane Doe", customer);
 
     }
-
+    
+    // Case #5
     [Fact]
-    public void CreateBooking_StartDateAtStartOfOccupiedPeriod_ShouldNotCreateBooking()
+    public void CreateBooking_EndDateAtEndOfOccupiedPeriod_ShouldNotCreateBooking()
     {
         //Arrange
         
@@ -145,7 +147,7 @@ public class CreateBookingE2ETest : IDisposable
         //Act
         driver.Navigate().GoToUrl(createURL);
         
-        CreateBookingOnWeb(occupiedStartDate, occupiedEndDate.AddDays(6));
+        CreateBookingOnWeb(DateTime.Today.AddDays(1), occupiedEndDate);
 
         Thread.Sleep(1000);        
         
@@ -156,7 +158,31 @@ public class CreateBookingE2ETest : IDisposable
         //Assert
         Assert.NotNull(errorText);
         Assert.NotEmpty(errorText);
-        Assert.Equal("ArgumentException: The start date cannot be in the past or later than the end date.", errorText);
+        Assert.Equal("The booking could not be created. There were no available room.", errorText);
+    }
+    
+    // Case #6
+    [Fact]
+    public void CreateBooking_StartDateAtStartOfOccupiedPeriod_ShouldNotCreateBooking()
+    {
+        //Arrange
+        
+        
+        //Act
+        driver.Navigate().GoToUrl(createURL);
+        
+        CreateBookingOnWeb(occupiedStartDate, occupiedEndDate.AddDays(14));
+
+        Thread.Sleep(1000);        
+        
+        string errorText = driver.FindElement(errorTextSelector).Text;
+        
+        output.WriteLine(errorText);
+        
+        //Assert
+        Assert.NotNull(errorText);
+        Assert.NotEmpty(errorText);
+        Assert.Equal("The booking could not be created. There were no available room.", errorText);
     }
 
 
